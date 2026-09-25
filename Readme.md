@@ -97,3 +97,82 @@ void setup() {
 
 void loop() {
 }
+```
+---
+
+### 2. Integration with LVGL (v8 / v9)
+
+#### Prerequisite: Configure `lv_conf.h`
+LVGL requires its configuration file to reside directly in the Arduino `libraries/` directory:
+1. Navigate to your Arduino `libraries/lvgl/` directory.
+2. Copy `lv_conf_template.h` and paste it one level up inside `Arduino/libraries/`.
+3. Rename the file to `lv_conf.h`.
+4. Open `lv_conf.h` and change `#if 0` to `#if 1` around line 15.
+
+#### Sketch Implementation
+```cpp
+#include <Arduino.h>
+#include <Nokia105_9Bit.h>
+#include <lvgl.h>
+
+Nokia105_9Bit lcd(5, 18, 23, 4, 15, 128, 160, false);
+
+// 20-line draw buffer (~6.4 KB)
+static uint8_t lv_buf[160 * 20 * 2]; 
+
+void my_disp_flush(lv_display_t *disp, const lv_area_t *area, uint8_t *px_map) {
+    uint32_t width  = (area->x2 - area->x1 + 1);
+    uint32_t height = (area->y2 - area->y1 + 1);
+
+    lcd.setAddrWindow(area->x1, area->y1, area->x2, area->y2);
+    lcd.pushColors((uint16_t *)px_map, width * height);
+
+    lv_display_flush_ready(disp);
+}
+
+void setup() {
+    lcd.begin(26 * 1000 * 1000);
+    lcd.setRotation(1);
+    lcd.setBrightness(255);
+    lcd.fillScreen(0x0000);
+
+    lv_init();
+
+    lv_display_t *disp = lv_display_create(lcd.width(), lcd.height());
+    lv_display_set_buffers(disp, lv_buf, NULL, sizeof(lv_buf), LV_DISPLAY_RENDER_MODE_PARTIAL);
+    lv_display_set_flush_cb(disp, my_disp_flush);
+
+    // Initialize UI elements here
+}
+
+void loop() {
+    lv_timer_handler();
+    delay(5);
+}
+```
+---
+
+## Core Methods
+
+* `void begin(uint32_t speed_hz = 26000000)`: Configures GPIOs, initialises the native SPI bus, and executes the controller start sequence.
+* `void setRotation(uint8_t m)`: Sets screen orientation (`0`: Portrait, `1`: Landscape, `2`: Inverted Portrait, `3`: Inverted Landscape).
+* `void setBrightness(uint8_t brightness)`: Adjusts PWM backlight duty cycle from `0` (Off) to `255` (Full).
+* `void sleep()`: Disables the backlight and transmits low-power sleep commands to the LCD controller.
+* `void wakeup()`: Restores the display controller and reenables the backlight.
+* `void setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)`: Defines the active bounding box for incoming pixel data.
+* `void pushColors(const uint16_t *data, uint32_t len)`: Bit-packs and transfers an array of RGB565 pixel values via hardware bursts.
+* `void fillScreen(uint16_t color)`: Writes a single RGB565 color to the entire active area.
+* `void drawPixel(uint16_t x, uint16_t y, uint16_t color)`: Sets a single pixel coordinate to the designated color.
+* `uint16_t width() const`: Returns current width in pixels (updates dynamically when rotated).
+* `uint16_t height() const`: Returns current height in pixels (updates dynamically when rotated).
+
+---
+
+## License & Terms of Use
+
+This library is licensed under a custom **Personal & Non-Commercial License**.
+
+* **Permitted:** Personal use, hobbyist experimentation, academic projects, and open learning.
+* **Prohibited:** Commercial exploitation, sale of the software, distribution within paid hardware products, or charging fees for compiled binaries and derivative works without explicit written authorization.
+
+Refer to the [LICENSE](LICENSE) file for complete terms.
