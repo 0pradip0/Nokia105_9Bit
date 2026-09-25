@@ -1,0 +1,22 @@
+#######################################
+# Syntax Highlighting for Nokia105_9Bit
+#######################################
+
+# Datatypes / Classes (KEYWORD1)
+Nokia105_9Bit	KEYWORD1
+
+# Methods and Functions (KEYWORD2)
+begin	KEYWORD2
+setRotation	KEYWORD2
+sendCommand	KEYWORD2
+sendData	KEYWORD2
+setAddrWindow	KEYWORD2
+pushColors	KEYWORD2
+drawPixel	KEYWORD2
+fillScreen	KEYWORD2
+width	KEYWORD2
+height	KEYWORD2
+
+# Constants (LITERAL1)
+LCD_CHUNK_PIXELS	LITERAL1
+LCD_DMA_BUF_SIZE	LITERAL1
