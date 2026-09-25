@@ -102,7 +102,7 @@ void loop() {
 
 ### 2. Integration with LVGL (v8 / v9)
 
-#### Prerequisite: Configure `lv_conf.h` [assumming lvgl library is already installed]
+#### Prerequisite: Configure `lv_conf.h` (Assuming lvgl library is already installed)
 LVGL requires its configuration file to reside directly in the Arduino `libraries/` directory:
 1. Navigate to your Arduino `libraries/lvgl/` directory.
 2. Copy `lv_conf_template.h` and paste it one level up inside `Arduino/libraries/`.
