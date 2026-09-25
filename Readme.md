@@ -93,22 +93,23 @@ void setup() {
 void loop() {
 }
 
+---
 
-
-2. Integration with LVGL (v8 / v9)
+## Integration with LVGL (v8 / v9)
 Prerequisite: Configure lv_conf.h
 LVGL requires its configuration file to reside directly in the Arduino libraries/ directory:
 
-    1. Navigate to your Arduino libraries/lvgl/ directory.
+* ** Navigate to your Arduino libraries/lvgl/ directory.
 
-    2.Copy lv_conf_template.h and paste it one level up inside Arduino/libraries/.
+* ** Copy lv_conf_template.h and paste it one level up inside Arduino/libraries/.
 
-    3. Rename the file to lv_conf.h.
+* ** Rename the file to lv_conf.h.
 
-    4.Open lv_conf.h and change #if 0 to #if 1 around line 15.
+* **Open lv_conf.h and change #if 0 to #if 1 around line 15.
+---
+## Sketch Implementation
 
-Sketch Implementation
-
+```cpp
 #include <Arduino.h>
 #include <Nokia105_9Bit.h>
 #include <lvgl.h>
@@ -148,8 +149,10 @@ void loop() {
     delay(5);
 }
 
+---
 
-Core Methods
+## Core Methods
+```cpp
 void begin(uint32_t speed_hz = 26000000): Configures GPIOs, initialises the native SPI bus, and executes the controller start sequence.
 
 void setRotation(uint8_t m): Sets screen orientation (0: Portrait, 1: Landscape, 2: Inverted Portrait, 3: Inverted Landscape).
